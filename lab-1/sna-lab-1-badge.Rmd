@@ -58,11 +58,11 @@ Draft a research question for a population you may be interested in studying, or
 
 3.  Explain the analytical level at which these data would need to be collected and analyzed.
 
-    -   
+    -   I would need to collect data on actors such as individuals as well as units, and connections, ties, that might include strength of relationship, number of interactions, length of relationship, and so forth.
 
 4.  How does this differ from the ways in which individual or group behavior is typically conceptualized and modeled in conventional educational research?
 
-    -   
+    -   The data is much less about impact of actions or behaviors and more about looking at the actions/relationships themselves.
 
 ### Part II: Data Product
 
@@ -73,8 +73,85 @@ Using one of the data sets provided in your data folder, **your goal for this la
 I highly recommend creating a new R script in your lab-1 folder to complete this task. When your code is ready to share, use the code chunk below to share the final code for your model and answer the questions that follow.
 
 ```{r, my-data-product}
-# YOUR FINAL CODE HERE
+library(tidygraph)
+library(ggraph)
+library(readxl)
 
+school_leaders <- read_excel("lab-1/data/School Leaders Data Chapter 9_a.xlsx", 
+                              col_names = FALSE)
+
+rownames(school_leaders) <- 1:43
+
+colnames(school_leaders) <- 1:43
+
+school_leaders
+
+leader_attributes <- read_excel("lab-1/data/School Leaders Data Chapter 9_e.xlsx")
+
+leader_matrix <- as.matrix(school_leaders)
+class(school_leaders)
+
+class(leader_matrix)
+leader_network <- as_tbl_graph(leader_matrix, 
+                                directed = TRUE)
+leader_matrix
+
+leader_edges <- leader_network |>
+  activate(edges) |>
+  as_tibble()
+
+leader_edges
+
+leader_network <- tbl_graph(edges = leader_edges, # specifies edges
+                             nodes = leader_attributes, # specifies nodes
+                             directed = TRUE)
+
+leader_network
+
+plot(leader_network)
+
+autograph(leader_network)
+
+autograph(leader_network,
+          node_label = ID,
+          node_colour = MALE)
+
+plot(leader_network)
+
+autograph(leader_network,
+          node_size = local_size(),
+          node_colour = local_size())
+ggraph(leader_network) + 
+  geom_node_point() 
+
+ggraph(leader_network, layout = "stress") + 
+  geom_node_point(aes(color = TRUST,
+                      size = local_size()))
+
+
+ggraph(leader_network, layout = "stress") + 
+  geom_node_point(aes(size = local_size(),
+                      color = TRUST)) +
+  geom_node_text(aes(label = ID,
+                     size = local_size()),
+                 repel = TRUE)+
+  geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
+                 end_cap = circle(3, 'mm'),
+                 start_cap = circle(3, 'mm'),
+                 alpha = .2) + 
+
+  
+  
+  ggraph(leader_network, layout = "stress") + 
+  geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
+                 end_cap = circle(3, 'mm'),
+                 start_cap = circle(3, 'mm'),
+                 alpha = .1) +
+  geom_node_point(aes(size = local_size(),
+                      color = TRUST)) +
+  geom_node_text(aes(label = ID),
+                 repel=TRUE) +
+  theme_graph()
 
 ```
 
