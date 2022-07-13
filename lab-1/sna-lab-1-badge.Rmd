@@ -1,7 +1,7 @@
 ---
 title: 'Intro to SNA Badge'
 subtitle: "LASER Institute SNA Learning Lab 1"
-author: "Dr. Shaun Kellogg"
+author: "Ashley Vaughn"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output: html_document
 ---
@@ -26,23 +26,23 @@ Use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#art
 
 1.  Provide an APA citation for your selected study.
 
-    -   
+    -   Ma, S., Herman, G. L., West, M., Tomkin, J., & Mestre, J. (2019). Studying STEM Faculty Communities of Practice through Social Network Analysis. The Journal of Higher Education, 1–27. doi:10.1080/00221546.2018.1557100
 
 2.  Who are the network's actors and how are they represented visually?
 
-    -   
+    -  120 faculty members engaged in STEM Communities of Practice 
 
 3.  What ties connect these actors and how are they represented visually?
 
-    -   
+    -   Interactions between faculty members, differentiated between "coversation" and "collaboration" ties
 
 4.  Why were these relations of interest to the researcher?
 
-    -   
+    -   To visualize and understand how discussions and collaborations extend across and within departments and CoPs
 
 5.  Finally, what makes this collection of actors a social network?
 
-    -   
+    -   They are a specific group of individual within a closed sytem, STEM education, who are interacting together for a variety of reasons
 
 Draft a research question for a population you may be interested in studying, or that would be of interest to educational researchers, and that would require the collection of relational data and answer the following questions:
 

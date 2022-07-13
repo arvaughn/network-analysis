@@ -1,7 +1,7 @@
 ---
 title: "Who's Friends with Who in Middle School"
 subtitle: "LASER Institute Learning Lab 1 Case Study"
-author: "Dr. Shaun Kellogg"
+author: "Ashley Vaughn"
 date: "`r format(Sys.Date(),'%B %e, %Y')`"
 output:
   html_document:
@@ -153,7 +153,8 @@ network perspective might be able to answer?
 
 In the space below, type a brief response to the following questions:
 
--   YOUR RESPONSE HERE
+-   Who are the key actors in student identified networks versus teacher
+    identified networks?
 
 ### 1c. Load Packages
 
@@ -263,9 +264,9 @@ Use the code chunk below load the {tidygraph}, {ggraph}, and {readxl}
 packages:
 
 ```{r load-packages}
-# YOUR CODE HERE
-
-
+library(ggraph)
+library(readxl)
+library(tidygraph)
 ```
 
 ------------------------------------------------------------------------
@@ -414,7 +415,8 @@ called `student_attributes`:
 
 ```{r student-attributes}
 
-student_attributes <- read_excel("data/student-attributes.xlsx")
+student_attributes <- read_excel("data/student-attributes.xlsx", 
+                              col_names = FALSE)
 
 student_attributes
 ```
@@ -435,11 +437,12 @@ inspect your `teacher_friends` object.
 
 ```{r import-teacher}
 # YOUR CODE HERE
-teacher_friends <- read_excel()
+teacher_friends <- read_excel("data/teacher-reported-friends.xlsx", 
+                              col_names = FALSE)
 
-rownames(teacher_friends) <- 
+rownames(teacher_friends) <- 1:27
 
-colnames(teacher_friends) <- 
+colnames(teacher_friends) <- 1:27
 
 teacher_friends
 ```
@@ -644,17 +647,20 @@ of students:
 
 ```{r teacher-network}
 # YOUR CODE HERE
-teacher_matrix <- as.matrix()
+teacher_matrix <- as.matrix(teacher_friends)
 
-teacher_network <- as_tbl_graph()
+teacher_network <- as_tbl_graph(teacher_matrix, 
+                                directed = TRUE)
+teacher_network
+
 
 teacher_edges <- teacher_network |>
-  activate() |>
+  activate(edges) |>
   as_tibble()
 
-teacher_network <- tbl_graph(edges = , 
-                             nodes = , 
-                             directed = )
+teacher_network <- tbl_graph(edges =teacher_edges, 
+                             nodes =student_attributes, 
+                             directed = TRUE )
 
 teacher_network
 ```
@@ -663,12 +669,12 @@ Now answer the questions that following questions:
 
 1.  How many students are in our network?
 
-    -   YOUR RESPONSE HERE
+    -   27
 
 2.  Who reported more friendships, teachers or students? How do you
     know?
 
-    -   YOUR RESPONSE HERE
+    -   Students reported more, with 203 edges.
 
 ------------------------------------------------------------------------
 
@@ -776,7 +782,11 @@ your `teacher_network` object you created above:
 
 ```{r teacher-sociogram}
 # YOUR CODE HERE
-
+plot(teacher_network)
+autograph(teacher_network)
+autograph(teacher_network,
+          node_label = id,
+          node_colour = gender)
 
 ```
 
@@ -824,7 +834,7 @@ operator:
 
 ```{r add-nodes}
 # YOUR CODE HERE
-ggraph(student_network) 
+ggraph(student_network) + geom_node_point() 
 ```
 
 Well, at least we have our nodes now!
@@ -988,7 +998,16 @@ if you can build something that is visually pleasing to you.
 
 ```{r your-sociogram}
 # YOUR CODE HERE
-
+ggraph(teacher_network, layout = "stress") + 
+  geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
+                 end_cap = circle(3, 'mm'),
+                 start_cap = circle(3, 'mm'),
+                 alpha = .1) +
+  geom_node_point(aes(size = local_size(),
+                      color = achievement)) +
+  geom_node_text(aes(label = id),
+                 repel=TRUE) +
+  theme_graph()
 
 ```
 
@@ -1080,6 +1099,20 @@ and write a brief narrative in the space that follows.
 
 ```{r create_data_product}
 # YOUR CODE HERE
+ggraph(teacher_network, layout = "stress") + 
+  geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
+                 end_cap = circle(3, 'mm'),
+                 start_cap = circle(3, 'mm'),
+                 alpha = .1) +
+  geom_node_point(aes(size = local_size(),
+                      color = achievement)) +
+  geom_node_text(aes(label = id),
+                 repel=TRUE) +
+  geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
+                 end_cap = circle(3, 'mm'),
+                 start_cap = circle(3, 'mm'),
+                 alpha = .2)
+  theme_graph()
 
 
 ```
