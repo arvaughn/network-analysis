@@ -54,7 +54,7 @@ Draft a research question for a population you may be interested in studying, or
 
 2.  For what reason would relational data need to be collected in order to address this question?
 
-    -   To visualize the interactions between units, departments, and individuals
+    -   To visualize the interactions between units, departments, and individuals.
 
 3.  Explain the analytical level at which these data would need to be collected and analyzed.
 
