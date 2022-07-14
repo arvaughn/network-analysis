@@ -124,9 +124,7 @@ autograph(leader_network,
 ggraph(leader_network) + 
   geom_node_point() 
 
-ggraph(leader_network, layout = "stress") + 
-  geom_node_point(aes(color = TRUST,
-                      size = local_size()))
+
 
 
 ggraph(leader_network, layout = "stress") + 
@@ -138,7 +136,7 @@ ggraph(leader_network, layout = "stress") +
   geom_edge_link(arrow = arrow(length = unit(1, 'mm')), 
                  end_cap = circle(3, 'mm'),
                  start_cap = circle(3, 'mm'),
-                 alpha = .2) + 
+                 alpha = .2) 
 
   
   

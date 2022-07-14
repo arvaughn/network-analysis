@@ -1,0 +1,152 @@
+---
+title: 'Network Measurement Badge'
+subtitle: "LASER Institute SNA Learning Lab 2"
+author: "Ashley Vaughn"
+date: "`r format(Sys.Date(),'%B %e, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+![](img/SNA_NetworkM_HX.png){width="30%"}
+
+The final activity for each learning lab provides space to work with data and to reflect on how the concepts and techniques introduced in each lab might apply to your own research.
+
+To earn a badge for each lab, you are required to respond to a set of prompts for two parts: 
+
+-   In Part I, you will reflect on your understanding of key concepts and begin to think about potential next steps for your own study.
+
+-   In Part II, you will create a simple data product in R that demonstrates your ability to apply a data analysis technique introduced in this learning lab.
+
+### Part I: Reflect and Plan
+
+Use the institutional library (e.g. [NCSU Library](https://www.lib.ncsu.edu/#articles)), [Google Scholar](https://scholar.google.com/) or search engine to locate a research article, presentation, or resource that applies social network analysis to an educational context or topic of interest. More specifically, **locate a network study that makes use of network-level structural measures to describe mathematically the network being studied.** You are also welcome to select one of the research papers listed in the [essential readings](https://github.com/laser-institute/essential-readings/tree/main/sna-labs/sna-lab-4) that may have piqued your interest.
+
+1.  Provide an APA citation for your selected study.
+
+    -   Quardokus, K., Henderson, C. Promoting instructional change: using social network analysis to understand the informal structure of academic departments. High Educ 70, 315–335 (2015). https://doi.org/10.1007/s10734-014-9831-0
+
+2.  Were the data collected on the complete, ego, or partial network? Describe the sources of these network data.
+
+    -   Partial network. Data was collected on 5 academic departments, with response rates ranging from 37-49% and 53-83% of each department included in the network.  
+
+3.  What relations were measured and what instruments were used to measure them? 
+
+    -   This study examined network level characteristics: density, centralization, transitivity, and individual roles: hubs of knowledge, gatekeepers; and subgroups.  Faculty were asked to identify up to 7 colleagues they discussed teaching-related issues at least once a month and how often they talk to them about teaching. They could also identify other not included on the provided list.
+
+Think about a network that you may be interested in studying, and answer the following questions:
+
+4.  Would your study employ a positional, relational, or event-based approach to specify the network's boundary?
+
+    -   It is likely my study would use a positional boundary.
+
+5.  What data would you want to collect for this study and how might you go about doing it?
+
+    -   I would provide a list of individuals currently involved in our STEM initiatives on campus and ask participants to identify those they interact with, defining types of interactions, and have them indicate how often they interact.
+
+6.  What relations would you measure and what individual attribute information might you collect?
+
+    -   I would look at individual connections, committees, ELCs, etc.
+
+7.  How might you approach collecting this data for your study? 
+
+    -   Survey, committee and meeting records
+
+### Part II: Data Product
+
+Using one of the data sets provided in your data folder, **your goal for this lab is to create a polished sociogram and write a brief narrative including some descriptive measures of your network.** For example, you may be interested in comparing size, density and level of reciprocity of two networks.
+
+**Alternatively, you may use your own data set to create a sociogram and calculate network-level measures to describe it.** 
+
+I highly recommend creating a new R script in your lab-4 folder to complete this task. When your code is ready to share, use the code chunk below to share the final code for your model and answer the questions that follow.
+
+```{r, my-data-product}
+# YOUR FINAL CODE HERE
+library(janitor)
+library(tidyverse)
+library(igraph)
+library(tidygraph)
+library(ggraph)
+
+dlt2_ties <- read_csv("data/dlt2-edges.csv", 
+                      col_types = cols(Sender = col_character(), 
+                                       Receiver = col_character(), 
+                                       `Category Text` = col_skip(), 
+                                       `Comment ID` = col_character(), 
+                                       `Discussion ID` = col_character())) |>
+  clean_names()
+
+dlt2_ties
+
+dlt2_actors <- read_csv("data/dlt2-nodes.csv", 
+                        col_types = cols(uid = col_character(), 
+                                         facilitator = col_character(), 
+                                         expert = col_character(), 
+                                         connect = col_character())) |>
+  clean_names()
+dlt2_actors
+
+dlt2_network <- tbl_graph(edges = dlt2_ties,
+                          nodes = dlt2_actors,
+                          node_key = "uid",
+                          directed = TRUE)
+dlt2_network
+
+ggraph(dlt2_network) +
+  geom_node_point() +
+  geom_edge_link()
+
+ggraph(dlt2_network, layout = "fr") +
+  geom_edge_link(alpha = .2) +
+  geom_node_point(aes(color = region,
+                      size = local_size())) +
+  theme_graph()
+
+ggraph(dlt2_network, layout = "fr") +
+  geom_edge_link(alpha = .2) +
+  geom_node_point(aes(color = expert,
+                      size = local_size())) +
+  theme_graph()
+
+ggraph(dlt2_network, layout = "fr") +
+  geom_edge_link(alpha = .2) +
+  geom_node_point(aes(color = experience2,
+                      size = local_size())) +
+  theme_graph()
+
+edge_density(dlt2_network)
+
+graph.density(dlt2_network)
+
+reciprocity(dlt2_network)
+transitivity(dlt2_network)
+diameter(dlt2_network)
+
+mean_distance(dlt2_network)
+
+```
+
+
+#### Narrative
+
+-   This second MOOC network is interesting, with a large center cluster with 70 outliers. The density is low at just .01, as is reciprocity, 25%, and trasitivity, .12. I examined the sociograms through several attributes and did not see any particular patterns emerge. 
+
+### Knit & Submit
+
+Congratulations, you've completed your Network Measures Badge! Complete the following steps to submit your work for review:
+
+1.  Change the name of the `author:` in the [YAML header](https://monashdatafluency.github.io/r-rep-res/yaml-header.html) at the very top of this document to your name. As noted in [Reproducible Research in R](https://monashdatafluency.github.io/r-rep-res/index.html), The YAML header controls the style and feel for knitted document but doesn't actually display in the final output.
+
+2.  Click the yarn icon above to "knit" your data product to a [HTML](https://bookdown.org/yihui/rmarkdown/html-document.html) file that will be saved in your R Project folder.
+
+3.  Commit your changes in GitHub Desktop and push them to your online GitHub repository.
+
+4.  Publish your HTML page the web using one of the following [publishing methods](https://rpubs.com/cathydatascience/518692):
+
+    -   Publish on [RPubs](https://rpubs.com) by clicking the "Publish" button located in the Viewer Pane when you knit your document. Note, you will need to quickly create a RPubs account.
+
+    -   Publishing on GitHub using either [GitHub Pages](https://pages.github.com) or the [HTML previewer](http://htmlpreview.github.io).
+
+5.  Post a new discussion on GitHub to our [SNA Badges forum](https://github.com/orgs/laser-institute/teams/network-analysis/discussions/1). In your post, include a link to your published web page and a short reflection highlighting one thing you learned from this lab and one thing you'd like to explore further.
